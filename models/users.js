@@ -99,6 +99,7 @@ userSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
+    this.confirmPassword = null;
   }
 
   next();
@@ -113,7 +114,7 @@ userSchema.methods.createPasswordResetToken = function () {
     .digest("hex");
 
   this.passwordResetToken = passwordResetToken;
-  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+  this.passwordResetExpires = Date.now() + 15 * 60 * 1000;
   console.log(this.passwordResetExpires);
 
   return resetToken;

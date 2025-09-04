@@ -7,6 +7,7 @@ import {
   activateUser,
   forgotPassword,
   resetPassword,
+  checkResetTokenValidity,
 } from "../controllers/authController.js";
 
 const router = express.Router();
@@ -17,6 +18,9 @@ router.post("/signout", signOut);
 router.post("/refresh", refreshAccessToken);
 router.get("/activate/:token", activateUser);
 router.post("/forgotPassword", forgotPassword);
-router.get("/resetPassword/:token", resetPassword);
+router
+  .route("/resetPassword/:token")
+  .get(checkResetTokenValidity)
+  .post(resetPassword);
 
 export default router;

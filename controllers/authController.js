@@ -297,15 +297,38 @@ export const forgotPassword = async (req, res, next) => {
     const resetToken = user.createPasswordResetToken();
     await user.save({ validateBeforeSave: false });
 
-    const resetUrl = `${req.protocol}://${req.get(
-      "host"
-    )}/api/v1/auth/resetPassword/${resetToken}`;
+    let resetUrl;
+    if (process.env.NODE_ENV === "development") {
+      resetUrl = `${process.env.FRONT_END_BASE_URL}/recover/resetpassword/${resetToken}`;
+    } else {
+      resetUrl = `${req.protocol}://${req.get(
+        "host"
+      )}/recover/resetpassword/${resetToken}`;
+    }
 
-    await new Email(user, resetUrl).send("Password Reset", "welcome");
+    await new Email(user, resetUrl).send("Password Reset", "passwordReset");
 
     return new AppResponse(200, "success").send(res);
   } catch (error) {
     return next(new AppError("something went wrong"));
+  }
+};
+
+export const checkResetTokenValidity = async (req, res, next) => {
+  try {
+    const { token } = req.params;
+    const resetToken = crypto.createHash("sha256").update(token).digest("hex");
+
+    const user = await User.findOne({
+      passwordResetToken: resetToken,
+      passwordResetExpires: { $gt: Date.now() },
+    });
+    if (!user) {
+      return next(new AppError("Invalid or expired token", 401));
+    }
+    return new AppResponse(200, "token is valid").send(res);
+  } catch (error) {
+    return next(new AppError("Something went wrong"));
   }
 };
 
@@ -314,21 +337,21 @@ export const resetPassword = async (req, res, next) => {
     const { token } = req.params;
     const resetToken = crypto.createHash("sha256").update(token).digest("hex");
 
-    const user = await User.find({
+    const user = await User.findOne({
       passwordResetToken: resetToken,
       passwordResetExpires: { $gt: Date.now() },
     });
 
     if (!user) {
-      return next(new AppError("Token is invalid or expired", 400));
+      return next(new AppError("Token is invalid or expired", 401));
     }
 
     user.password = req.body.password;
     user.passwordResetExpires = undefined;
     user.passwordResetToken = undefined;
-    await user.save();
+    await user.save({ validateBeforeSave: false });
 
-    return new AppResponse(200, "reset").send(res);
+    return new AppResponse(200, "Password reset successfully").send(res);
   } catch (error) {
     console.log(error);
     return next(new AppError());
