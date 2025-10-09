@@ -5,6 +5,7 @@ import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import usersRouter from "./routes/users.routes.js";
 import authRouter from "./routes/auth.routes.js";
+import postsRouter from "./routes/posts.routes.js";
 import globalErrorHandler from "./error_handler/globalErrorHandler.js";
 import fs from "fs";
 
@@ -60,6 +61,7 @@ process.on("SIGTERM", gracefulShutdown);
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", usersRouter);
+app.use("/api/v1/posts", postsRouter);
 app.use(globalErrorHandler);
 
 let css_f = ":root {\n";

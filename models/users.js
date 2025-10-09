@@ -92,9 +92,13 @@ const userSchema = new Schema({
   passwordResetExpires: Date,
   activationToken: String,
   activationTokenExpires: Date,
+  posts: {
+    type: [mongoose.Schema.ObjectId],
+    ref: "Post",
+  },
 });
 
-// mongodb doc middleware
+// DOCUMENT PRE SAVE MIDDLEWARE
 userSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
     const salt = await bcrypt.genSalt(10);
@@ -105,6 +109,7 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
+// PASSWORD RESET TOKE
 userSchema.methods.createPasswordResetToken = function () {
   const resetToken = crypto.randomBytes(32).toString("hex");
   // hashed
@@ -120,6 +125,7 @@ userSchema.methods.createPasswordResetToken = function () {
   return resetToken;
 };
 
+// ACTIVATION TOKEN
 userSchema.methods.createActivationToken = function () {
   const activationToken = crypto.randomBytes(32).toString("hex");
   const activationTokenExpires = Date.now() + 2 * 60 * 1000;
