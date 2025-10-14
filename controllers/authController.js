@@ -155,6 +155,7 @@ export const signIn = async (req, res, next) => {
 
     // 2. find the user
     const user = await User.findOne({ email });
+    // console.log(user);
     if (!user) {
       return next(new AppError("Invalid Credentials", 404));
     }
@@ -165,6 +166,7 @@ export const signIn = async (req, res, next) => {
       return next(new AppError("Invalid Credentials", 401));
     }
 
+    // console.log(isMatch);
     // 4. create JWT access token
     const tokenPayload = {
       userId: user.id,
@@ -181,7 +183,7 @@ export const signIn = async (req, res, next) => {
 
     // save hashedRefreshToken in data base
     user.refreshToken = hashedRefreshToken;
-    await user.save();
+    await user.save({ validateBeforeSave: false });
 
     // send response
     const resObject = {
@@ -192,6 +194,7 @@ export const signIn = async (req, res, next) => {
 
     return new AppResponse(200, "Signed in successfully", resObject).send(res);
   } catch (error) {
+    console.log(error);
     next(new AppError("something wennt wrong"));
   }
 };

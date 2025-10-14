@@ -22,6 +22,7 @@ const postSchema = new Schema({
   },
   author: {
     type: mongoose.ObjectId,
+    required: true,
   },
 });
 
