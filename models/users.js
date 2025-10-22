@@ -96,6 +96,10 @@ const userSchema = new Schema({
     type: [mongoose.Schema.ObjectId],
     ref: "Post",
   },
+  userDetails: {
+    type: mongoose.Schema.ObjectId,
+    ref: "UserDetails",
+  },
 });
 
 // DOCUMENT PRE SAVE MIDDLEWARE

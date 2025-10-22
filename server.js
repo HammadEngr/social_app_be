@@ -1,13 +1,16 @@
-import express from "express";
-import dotenv from "dotenv";
-import cors from "cors";
 import bodyParser from "body-parser";
+import cors from "cors";
+import dotenv from "dotenv";
+import express from "express";
+import fs from "fs";
 import mongoose from "mongoose";
-import usersRouter from "./routes/users.routes.js";
+import path from "path";
+import { fileURLToPath } from "url";
+import globalErrorHandler from "./error_handler/globalErrorHandler.js";
 import authRouter from "./routes/auth.routes.js";
 import postsRouter from "./routes/posts.routes.js";
-import globalErrorHandler from "./error_handler/globalErrorHandler.js";
-import fs from "fs";
+import usersRouter from "./routes/users.routes.js";
+import userUpdateRouter from "./routes/userUpdates.routes.js";
 
 dotenv.config();
 
@@ -59,7 +62,15 @@ const gracefulShutdown = () => {
 process.on("SIGINT", gracefulShutdown);
 process.on("SIGTERM", gracefulShutdown);
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// STATIC FILES
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// ROUTES
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/user", userUpdateRouter);
 app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/posts", postsRouter);
 app.use(globalErrorHandler);

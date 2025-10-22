@@ -1,0 +1,12 @@
+2025-10-22 14:04:47 [ERROR] : Error: Something Went wrong
+Stack: Error: Something Went wrong
+    at addUserDetails (file:///C:/Users/Competent/Desktop/Dtest_hammad/backend/controllers/userController.js:45:17)
+    at Layer.handleRequest (C:\Users\Competent\Desktop\Dtest_hammad\backend\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\Competent\Desktop\Dtest_hammad\backend\node_modules\router\lib\route.js:157:13)
+    at file:///C:/Users/Competent/Desktop/Dtest_hammad/backend/middlewares/uploadImages.js:60:7
+2025-10-22 14:05:28 [ERROR] : Error: Something Went wrong
+Stack: Error: Something Went wrong
+    at addUserDetails (file:///C:/Users/Competent/Desktop/Dtest_hammad/backend/controllers/userController.js:45:17)
+    at Layer.handleRequest (C:\Users\Competent\Desktop\Dtest_hammad\backend\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\Competent\Desktop\Dtest_hammad\backend\node_modules\router\lib\route.js:157:13)
+    at file:///C:/Users/Competent/Desktop/Dtest_hammad/backend/middlewares/uploadImages.js:60:7
